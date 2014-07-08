@@ -43,4 +43,6 @@ module Tilt
       doc.render
     end
   end
+
+  register PrawnTemplate, 'prawn'
 end

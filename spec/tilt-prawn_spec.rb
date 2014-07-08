@@ -14,6 +14,10 @@ describe Tilt::PrawnTemplate do
     end
   end
 
+  it 'is registered for .prawn files' do
+    expect(Tilt['foo.prawn']).to be(described_class)
+  end
+
   describe 'string templates' do
     it 'renders basic' do
       template = Tilt::PrawnTemplate.new { 'pdf.text "Hello World"' }
