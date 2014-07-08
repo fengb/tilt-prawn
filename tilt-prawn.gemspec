@@ -13,10 +13,10 @@ Gem::Specification.new do |gem|
   gem.files = Dir["lib/**/*"] + %w[LICENSE]
   gem.require_paths = ["lib"]
 
-  gem.add_runtime_dependency 'tilt', '>= 1.4'
-  gem.add_runtime_dependency 'prawn', '>= 1.0'
+  gem.add_runtime_dependency 'tilt', '~> 1.4'
+  gem.add_runtime_dependency 'prawn', '~> 1.0'
 
-  gem.add_development_dependency 'rspec', '~> 3.0.0'
-  gem.add_development_dependency 'pdf-reader', '~> 1.3.3'
-  gem.add_development_dependency 'pry'
+  gem.add_development_dependency 'rspec', '~> 3.0'
+  gem.add_development_dependency 'pdf-reader', '~> 1.3'
+  gem.add_development_dependency 'pry', '~> 0.10'
 end
