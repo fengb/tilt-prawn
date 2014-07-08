@@ -13,6 +13,8 @@ Gem::Specification.new do |gem|
   gem.files = Dir["lib/**/*"] + %w[LICENSE]
   gem.require_paths = ["lib"]
 
-  gem.add_runtime_dependency 'tilt'
-  gem.add_runtime_dependency 'prawn'
+  gem.add_runtime_dependency 'tilt', '>= 1.4'
+  gem.add_runtime_dependency 'prawn', '>= 1.0'
+
+  gem.add_development_dependency 'rspec', '>= 3.0.0'
 end
