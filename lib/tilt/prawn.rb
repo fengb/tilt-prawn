@@ -18,6 +18,7 @@ module Tilt
     end
 
     def evaluate(scope, locals, &block)
+      scope ||= Object.new
       doc = ::Prawn::Document.new do |pdf|
         if data.respond_to?(:call)
           scope = scope.dup # preserve scope object on caller

@@ -10,7 +10,7 @@ Gem::Specification.new do |gem|
   gem.description       = 'tilt-prawn integrates prawn with tilt'
   gem.license           = 'MIT'
 
-  gem.files = Dir["lib/**/*"] + %w[LICENSE]
+  gem.files = Dir["lib/**/*"] + %w[LICENSE README.md]
   gem.require_paths = ["lib"]
 
   gem.add_runtime_dependency 'tilt', '~> 1.4'
