@@ -1,5 +1,7 @@
 require 'tilt/prawn'
+
 require 'pdf-reader'
+require 'ostruct'
 
 describe Tilt::PrawnTemplate do
   class PdfOutput
@@ -18,6 +20,20 @@ describe Tilt::PrawnTemplate do
 
       output = PdfOutput.new(template.render)
       expect(output.text).to include('Hello World')
+    end
+
+    it 'renders scope methods' do
+      template = Tilt::PrawnTemplate.new { 'pdf.text foo' }
+
+      output = PdfOutput.new(template.render(OpenStruct.new(foo: 'Zeo')))
+      expect(output.text).to include('Zeo')
+    end
+
+    it 'renders local variables' do
+      template = Tilt::PrawnTemplate.new { 'pdf.text foo' }
+
+      output = PdfOutput.new(template.render(Object.new, foo: 'Small Worlds'))
+      expect(output.text).to include('Small Worlds')
     end
   end
 

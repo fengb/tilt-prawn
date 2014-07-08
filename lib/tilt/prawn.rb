@@ -24,7 +24,10 @@ module Tilt
         else
           ::Prawn::Document.new do |pdf|
             context = scope.instance_eval { binding }
-            eval(data, context)
+            locals.each do |key, val|
+              context.local_variable_set(key, val)
+            end
+            context.eval(data)
           end
         end
       doc.render
