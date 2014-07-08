@@ -18,18 +18,22 @@ module Tilt
     end
 
     def evaluate(scope, locals, &block)
-      doc =
+      doc = ::Prawn::Document.new do |pdf|
         if data.respond_to?(:call)
-          ::Prawn::Document.new(&data)
-        else
-          ::Prawn::Document.new do |pdf|
-            context = scope.instance_eval { binding }
-            locals.each do |key, val|
-              context.local_variable_set(key, val)
-            end
-            context.eval(data)
+          # preserve scope object on caller
+          scope = scope.dup
+          locals.each do |key, val|
+            scope.define_singleton_method(key) { val }
           end
+          scope.instance_exec(pdf, &data)
+        else
+          context = scope.instance_eval { binding }
+          locals.each do |key, val|
+            context.local_variable_set(key, val)
+          end
+          context.eval(data)
         end
+      end
       doc.render
     end
   end

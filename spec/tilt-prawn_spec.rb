@@ -46,5 +46,23 @@ describe Tilt::PrawnTemplate do
       output = PdfOutput.new(template.render)
       expect(output.text).to include('Hello World')
     end
+
+    it 'renders scope methods' do
+      template = Tilt::PrawnTemplate.new do |pdf|
+        ->(pdf) { pdf.text foo }
+      end
+
+      output = PdfOutput.new(template.render(OpenStruct.new(foo: 'Zeo')))
+      expect(output.text).to include('Zeo')
+    end
+
+    it 'renders local variables' do
+      template = Tilt::PrawnTemplate.new do |pdf|
+        ->(pdf) { pdf.text foo }
+      end
+
+      output = PdfOutput.new(template.render(Object.new, foo: 'Small Worlds'))
+      expect(output.text).to include('Small Worlds')
+    end
   end
 end
