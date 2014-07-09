@@ -41,7 +41,7 @@ describe Tilt::PrawnTemplate do
     end
 
     describe 'arbitrary ruby' do
-      it 'renders methods' do
+      it 'renders methods without bleeding out' do
         template = Tilt::PrawnTemplate.new do
           <<-END
             def foo
@@ -52,11 +52,14 @@ describe Tilt::PrawnTemplate do
           END
         end
 
-        output = PdfOutput.new(template.render)
+        scope = Object.new
+
+        output = PdfOutput.new(template.render(scope))
         expect(output.text).to include('story')
+        expect(scope).to_not respond_to(:foo)
       end
 
-      it 'renders classes' do
+      it 'renders classes without bleeding out' do
         template = Tilt::PrawnTemplate.new do
           <<-END
             class Bob < String
@@ -68,26 +71,6 @@ describe Tilt::PrawnTemplate do
 
         output = PdfOutput.new(template.render)
         expect(output.text).to include('forty')
-      end
-
-      it 'does not bleed out the enclosing scope' do
-        pending 'class bleeds out to Tilt::PrawnTemplate'
-        scope = Object.new
-        template = Tilt::PrawnTemplate.new do
-          <<-END
-            def foo
-              'story'
-            end
-
-            class Foo
-            end
-          END
-        end
-
-        template.render
-        expect(scope).to_not respond_to(:foo)
-        expect(Object).to_not be_const_defined(:Foo)
-        expect(Tilt::PrawnTemplate).to_not be_const_defined(:Foo)
       end
     end
   end
@@ -121,7 +104,7 @@ describe Tilt::PrawnTemplate do
     end
 
     describe 'arbitrary ruby' do
-      it 'renders methods' do
+      it 'renders methods without bleeding out' do
         template = Tilt::PrawnTemplate.new do |pdf|
           Proc.new do |pdf|
             def foo
@@ -132,11 +115,16 @@ describe Tilt::PrawnTemplate do
           end
         end
 
-        output = PdfOutput.new(template.render)
+        scope = Object.new
+
+        output = PdfOutput.new(template.render(scope))
         expect(output.text).to include('story')
+        expect(scope).to_not respond_to(:foo)
       end
 
-      it 'renders classes' do
+      it 'renders classes without bleeding out' do
+        pending 'currently bleeds out to Tilt::PrawnTemplate'
+
         template = Tilt::PrawnTemplate.new do |pdf|
           Proc.new do |pdf|
             class Bob < String
@@ -148,26 +136,8 @@ describe Tilt::PrawnTemplate do
 
         output = PdfOutput.new(template.render)
         expect(output.text).to include('forty')
-      end
-
-      it 'does not bleed out the enclosing scope' do
-        pending 'classes bleed out to Tilt::PrawnTemplate'
-        scope = Object.new
-        template = Tilt::PrawnTemplate.new do |pdf|
-          Proc.new do |pdf|
-            def foo
-              'story'
-            end
-
-            class Foo
-            end
-          end
-        end
-
-        template.render
-        expect(scope).to_not respond_to(:foo)
-        expect(Object).to_not be_const_defined(:Foo)
-        expect(Tilt::PrawnTemplate).to_not be_const_defined(:Foo)
+        expect(Object).to_not be_const_defined(:Bob)
+        expect(Tilt::PrawnTemplate).to_not be_const_defined(:Bob)
       end
     end
   end

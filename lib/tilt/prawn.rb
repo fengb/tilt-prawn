@@ -18,30 +18,22 @@ module Tilt
     end
 
     def evaluate(scope, locals, &block)
-      scope ||= Object.new
-      doc = ::Prawn::Document.new do |pdf|
-        if data.respond_to?(:call)
-          scope = scope.dup # preserve scope object on caller
-          locals.each do |key, val|
-            scope.define_singleton_method(key) { val }
-          end
-          scope.instance_exec(pdf, &data)
-        else
-          context = scope.instance_eval { binding }
-          if context.respond_to?(:local_variable_set)
-            locals.each do |key, val|
-              context.local_variable_set(key, val)
-            end
-          else
-            locals.each do |key, val|
-              # Wow, what a hack
-              context.eval("#{key} = #{val.inspect}")
-            end
-          end
-          context.eval(data)
+      scope = scope ? scope.dup : BasicObject.new
+      pdf = ::Prawn::Document.new
+      if data.respond_to?(:call)
+        locals.each do |key, val|
+          scope.define_singleton_method(key) { val }
         end
+        scope.instance_exec(pdf, &data)
+      else
+        locals[:pdf] = pdf
+        super(scope, locals, &block)
       end
-      doc.render
+      pdf.render
+    end
+
+    def precompiled_template(local_keys)
+      data
     end
   end
 
