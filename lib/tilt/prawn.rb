@@ -6,14 +6,6 @@ module Tilt
   class PrawnTemplate < Template
     self.default_mime_type = 'application/pdf'
 
-    def self.engine_initialized?
-      defined? ::Prawn::Document
-    end
-
-    def initialize_engine
-      require_template_library 'prawn'
-    end
-
     def prepare
     end
 
