@@ -36,6 +36,41 @@ template = Tilt.new('hello.prawn')
 puts template.render(nil, name: 'Bob')
 ```
 
+## Customization
+
+Additional convenience methods may be added to the rendering engine:
+
+```ruby
+Tilt::PrawnTemplate.extend_engine do
+  def date_text(date)
+    text date.strftime('%b %d, %Y')
+  end
+end
+```
+
+`date_text` is now available as an instance method on the renderer:
+
+```ruby
+pdf.date_text(Date.today)
+```
+
+If you defined an external class as a base template, you may use it instead of
+the default class:
+
+```ruby
+class CustomEngine < Prawn::Document
+end
+
+Tilt::PrawnTemplate.engine = CustomEngine
+```
+
+Alternatively, may be passed in as an argument to the template constructor:
+
+```ruby
+template = Tilt.new('hello.prawn', engine: CustomEngine)
+puts template.render
+```
+
 ## Contributing
 
 1. Fork it

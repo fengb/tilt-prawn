@@ -141,4 +141,42 @@ describe Tilt::PrawnTemplate do
       end
     end
   end
+
+  context 'configuration' do
+    class TestEngine < ::Prawn::Document
+      def beer(times)
+        text 'beer'*times
+      end
+    end
+
+    after do
+      Tilt::PrawnTemplate.reset_engine!
+    end
+
+    it 'can swap out .engine' do
+      Tilt::PrawnTemplate.engine = TestEngine
+      template = Tilt::PrawnTemplate.new { 'pdf.beer 3' }
+
+      output = PdfOutput.new(template.render)
+      expect(output.text).to include('beerbeerbeer')
+    end
+
+    it 'can .extend_engine' do
+      Tilt::PrawnTemplate.extend_engine do
+        def eat
+          text 'EAAAAT'
+        end
+      end
+      template = Tilt::PrawnTemplate.new { 'pdf.eat' }
+
+      output = PdfOutput.new(template.render)
+      expect(output.text).to include('EAAAAT')
+    end
+
+    it 'can use options[:engine]' do
+      template = Tilt::PrawnTemplate.new(engine: TestEngine) { 'pdf.beer 2' }
+      output = PdfOutput.new(template.render)
+      expect(output.text).to include('beerbeer')
+    end
+  end
 end
