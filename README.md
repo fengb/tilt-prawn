@@ -1,5 +1,4 @@
-# tilt-prawn
-[![Build Status](https://travis-ci.org/fengb/tilt-prawn.png?branch=master)](https://travis-ci.org/fengb/tilt-prawn)
+# tilt-prawn [![Build Status](https://travis-ci.org/fengb/tilt-prawn.png?branch=master)](https://travis-ci.org/fengb/tilt-prawn)
 
 Adds support for rendering [Prawn](http://prawn.majesticseacreature.com/) templates using [Tilt](https://github.com/rtomayko/tilt).
 
