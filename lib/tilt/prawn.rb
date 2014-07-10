@@ -33,7 +33,7 @@ module Tilt
     end
 
     def evaluate(scope, locals, &block)
-      scope = scope ? scope.dup : BasicObject.new
+      scope = scope ? scope.dup : Object.new
       pdf = engine.new
       if data.respond_to?(:call)
         locals.each do |key, val|
